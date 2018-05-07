@@ -7,20 +7,6 @@
         android:title="@string/pause"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/settings"/>
-    <item
-        android:id="@+id/action_achievements"
-        android:orderInCategory="100"
-        android:title="@string/achievements"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/tips"
-        android:orderInCategory="100"
-        android:title="@string/useful_tips"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_faq"
         android:orderInCategory="100"
         android:title="@string/faq"

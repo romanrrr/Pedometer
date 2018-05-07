@@ -1,0 +1,59 @@
+{
+  "backgroundImage": "",
+  "backgroundColor": "333333",
+  "textColor": "#ffffff",
+  "navigation": "menu",
+  "drawerBackgroundImage": "uploaded_data\/blue.jpg",
+  "drawerIcon": "uploaded_data\/coub_icon.png",
+  "layout": "basicLayout",
+  "stepsChart": "bars",
+  "stepsChartColorSteps": "#cccc00",
+  "stepsChartColorGoal": "#cc00cc",
+  "pieChart": "mpPie",
+  "pieStepsColor": "#2196F3",
+  "pieGoalColor": "#BBDEFB",
+  "progressWidth": "thick",
+
+  "achievementLockedImage": "uploaded_data\/placeholder.jpg",
+  "achievements": [
+    {
+      "name": "test3",
+      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
+      "image": "uploaded_data\/coub_icon.png",
+      "type": "stepsTotal",
+      "value": 100
+    },
+    {
+      "name": "test23",
+      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
+      "image": "uploaded_data\/coub_icon.png",
+      "type": "stepsDaily",
+      "value": 50
+    },
+    {
+      "name": "test233",
+      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
+      "image": "uploaded_data\/coub_icon.png",
+      "type": "stepsDaily",
+      "value": 50
+    },
+    {
+      "name": "impossibru bru  bru  bru bru bru bru bru bru bru",
+      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
+      "image": "uploaded_data\/coub_icon.png",
+      "type": "stepsDaily",
+      "value": 50000
+    }
+  ],
+
+  "tipsUrl": "http://nsk.iloverunning.net/",
+
+  "name": "PEDOMETR",
+  "template": "pedometer",
+  "icon": "uploaded_data\/icon.png",
+  "themeColors": {
+    "colorPrimary": "#ff0000",
+    "colorPrimaryDark": "#aa0000",
+    "colorAccent": "#00ff00"
+  }
+}
