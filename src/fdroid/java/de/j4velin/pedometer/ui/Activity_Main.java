@@ -147,6 +147,7 @@ public class Activity_Main extends AppCompatActivity {
             viewPager = findViewById(R.id.pager);
 
             viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
+            viewPager.setOffscreenPageLimit(0);
             tabLayout.setupWithViewPager(viewPager);
             tabLayout.getTabAt(0).setText(R.string.overview);
             tabLayout.getTabAt(1).setText(R.string.settings);
@@ -250,21 +251,6 @@ public class Activity_Main extends AppCompatActivity {
         }
     }
 
-    boolean showFullscreen;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(showFullscreen) {
-            AppsgeyserSDK
-                    .getFullScreenBanner(this)
-                    .load(Constants.BannerLoadTags.ON_START);
-            showFullscreen = false;
-        }else {
-            showFullscreen = true;
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
@@ -297,11 +283,6 @@ public class Activity_Main extends AppCompatActivity {
                         .replace(R.id.container, new AchievementsFragment(), "achievement").addToBackStack(null)
                         .commit();
                 break;
-            case R.id.action_faq:
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://j4velin.de/faq/index.php?app=pm"))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                break;
             case R.id.action_about:
                 AppsgeyserSDK.showAboutDialog(this);
                 break;
@@ -323,6 +304,13 @@ public class Activity_Main extends AppCompatActivity {
                     fragment.onOptionsItemSelected(item);
                 }
                 return true;
+            case R.id.action_share:
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = config.getTipsUrl();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                break;
         }
         return true;
     }
@@ -362,6 +350,17 @@ public class Activity_Main extends AppCompatActivity {
                 count++;
             }
             return count;
+        }
+    }
+
+
+    long lastShownTime = 0;
+    public void showFullscreen(){
+        if(System.currentTimeMillis() - lastShownTime > 2 * 60 * 1000) {
+            AppsgeyserSDK
+                    .getFullScreenBanner(this)
+                    .load(Constants.BannerLoadTags.ON_START);
+            lastShownTime = System.currentTimeMillis();
         }
     }
 }

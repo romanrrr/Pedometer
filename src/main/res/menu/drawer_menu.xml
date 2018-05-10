@@ -12,15 +12,11 @@
         <item
             android:id="@+id/action_achievements"
             android:title="@string/achievements"
-            android:icon="@drawable/ic_star_border_black_24dp"/>
+            android:icon="@drawable/trophy"/>
         <item
             android:id="@+id/tips"
             android:title="@string/useful_tips"
             android:icon="@drawable/ic_lightbulb_outline_black_24dp"/>
-        <item
-            android:id="@+id/action_faq"
-            android:title="@string/faq"
-            android:icon="@drawable/ic_question_answer_black_24dp"/>
         <item
             android:id="@+id/action_split_count"
             android:title="@string/split_count"

@@ -7,11 +7,6 @@
         android:title="@string/pause"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_faq"
-        android:orderInCategory="100"
-        android:title="@string/faq"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_split_count"
         android:orderInCategory="100"
         android:title="@string/split_count"

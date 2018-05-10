@@ -46,6 +46,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.configuration.Constants;
+
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
@@ -82,7 +85,8 @@ public class FragmentOverviewProgress extends BaseFragmentOverview  {
         stepsView = (TextView) v.findViewById(R.id.steps);
         totalView = (TextView) v.findViewById(R.id.total);
         averageView = (TextView) v.findViewById(R.id.average);
-
+        TextView dataNotice = (TextView) v.findViewById(R.id.dataNotice);
+        dataNotice.setTextColor(config.getTextColor());
         stepsView.setTextColor(config.getTextColor());
         totalView.setTextColor(config.getTextColor());
         averageView.setTextColor(config.getTextColor());
@@ -122,6 +126,7 @@ public class FragmentOverviewProgress extends BaseFragmentOverview  {
 
         progressBar.setOnClickListener(changeUnitClickListener);
         stepsView.setOnClickListener(changeUnitClickListener);
+        ((Activity_Main) getActivity()).showFullscreen();
 
         return v;
     }

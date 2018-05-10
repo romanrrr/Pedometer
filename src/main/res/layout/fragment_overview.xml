@@ -103,7 +103,14 @@
         android:layout_below="@id/averageandtotal">
 
         <include layout="@layout/steps_chart"/>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="@string/dataNotice"
+            android:id="@+id/dataNotice"/>
     </FrameLayout>
 
 </RelativeLayout>

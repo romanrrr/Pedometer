@@ -39,6 +39,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.configuration.Constants;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -76,6 +78,8 @@ public class Fragment_Overview extends BasePieFragmentOverview implements Sensor
         stepsView = (TextView) v.findViewById(R.id.steps);
         totalView = (TextView) v.findViewById(R.id.total);
         averageView = (TextView) v.findViewById(R.id.average);
+        TextView dataNotice = (TextView) v.findViewById(R.id.dataNotice);
+        dataNotice.setTextColor(config.getTextColor());
 
         stepsView.setTextColor(config.getTextColor());
         totalView.setTextColor(config.getTextColor());
@@ -92,6 +96,8 @@ public class Fragment_Overview extends BasePieFragmentOverview implements Sensor
             }
         });
         createPie(v);
+        ((Activity_Main) getActivity()).showFullscreen();
+
         return v;
     }
 }

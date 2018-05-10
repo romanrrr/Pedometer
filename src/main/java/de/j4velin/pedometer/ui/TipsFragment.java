@@ -2,6 +2,9 @@ package de.j4velin.pedometer.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.configuration.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -72,6 +76,8 @@ public class TipsFragment extends Fragment {
         webView.loadUrl(config.getTipsUrl());
 
         setHasOptionsMenu(true);
+        ((Activity_Main) getActivity()).showFullscreen();
+
         return v;
     }
 
@@ -83,38 +89,19 @@ public class TipsFragment extends Fragment {
         }
     }
 
-/*
+
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        if (config.getNavigation().equals(Config.Navigation.DRAWER.getName())) {
-            inflater.inflate(R.menu.main_menu_drawer, menu);
-        } else if (config.getNavigation().equals(Config.Navigation.TABS.getName())) {
-            inflater.inflate(R.menu.tabs_menu, menu);
-        } else {
-            inflater.inflate(R.menu.main, menu);
-        }
-
+        inflater.inflate(R.menu.tips_menu, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(final Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(config.getNavigation().equals(Config.Navigation.MENU.getName())){
-            menu.findItem(R.id.action_split_count).setVisible(false);
-            menu.findItem(R.id.action_achievements).setVisible(false);
-            config.isAboutEnabled(getActivity(), new AppsgeyserSDK.OnAboutDialogEnableListener() {
-                @Override
-                public void onDialogEnableReceived(boolean enabled) {
-                    menu.findItem(R.id.action_about).setVisible(enabled);
-                }
-            });
-        }
-        if(config.getNavigation().equals(Config.Navigation.TABS.getName())){
-            menu.findItem(R.id.action_split_count).setVisible(false);
-        }
-        menu.findItem(R.id.action_pause).setVisible(false);
-
-    }*/
+        Drawable d = getResources().getDrawable(R.drawable.ic_share_black_24dp);
+        d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        menu.findItem(R.id.action_share).setIcon(d);
+    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {

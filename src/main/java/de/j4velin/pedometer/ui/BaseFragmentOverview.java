@@ -214,6 +214,11 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
             if(config.getAchievementList().size() == 0) {
                 MenuItem achievements = menu.findItem(R.id.action_achievements);
                 achievements.setVisible(false);
+            }else {
+                Drawable d = getResources().getDrawable(R.drawable.trophy);
+                MenuItem achievements = menu.findItem(R.id.action_achievements);
+                d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                achievements.setIcon(d);
             }
             config.isAboutEnabled(getActivity(), new AppsgeyserSDK.OnAboutDialogEnableListener() {
                 @Override
@@ -304,8 +309,12 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         Entry bm;
         Database db = Database.getInstance(getActivity());
         List<Pair<Long, Integer>> last = db.getLastEntries(8);
-        while(last.size() < 8 && last.size() > 0){
-            last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24*60*60*1000, 0));
+        while(last.size() < 8 ){
+            if(last.size() > 0) {
+                last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24 * 60 * 60 * 1000, 0));
+            }else {
+                last.add(new Pair<Long, Integer>(System.currentTimeMillis(), 0));
+            }
         }
         db.close();
 
@@ -365,10 +374,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         valueLineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if(value > integerDateMap.size()){
+                Date date = integerDateMap.get((int) value);
+                if(date == null){
                     return "";
                 }
-                Date date = integerDateMap.get((int) value);
                 return df.format(date);
             }
         });
@@ -399,8 +408,12 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         BarEntry bm;
         Database db = Database.getInstance(getActivity());
         List<Pair<Long, Integer>> last = db.getLastEntries(8);
-        while(last.size() < 8 && last.size() > 0){
-            last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24*60*60*1000, 0));
+        while(last.size() < 8 ){
+            if(last.size() > 0) {
+                last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24 * 60 * 60 * 1000, 0));
+            }else {
+                last.add(new Pair<Long, Integer>(System.currentTimeMillis(), 0));
+            }
         }
         db.close();
 

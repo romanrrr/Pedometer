@@ -20,14 +20,6 @@
         android:summary="@string/pause_on_power_summary"/>
 
     <de.j4velin.pedometer.ui.MyPreference
-        android:key="export"
-        android:summary="@string/export_summary"
-        android:title="@string/export_title"/>
-    <de.j4velin.pedometer.ui.MyPreference
-        android:key="import"
-        android:summary="@string/import_summary"
-        android:title="@string/import_title"/>
-    <de.j4velin.pedometer.ui.MyPreference
         android:key="license"
         android:title="@string/license"/>
 </PreferenceScreen>

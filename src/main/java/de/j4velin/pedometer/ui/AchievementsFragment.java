@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.configuration.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,6 +73,8 @@ public class AchievementsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         setHasOptionsMenu(true);
+
+        ((Activity_Main) getActivity()).showFullscreen();
         return v;
     }
 

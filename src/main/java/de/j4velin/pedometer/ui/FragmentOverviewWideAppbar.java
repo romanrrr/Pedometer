@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.configuration.Constants;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -83,7 +85,8 @@ public class FragmentOverviewWideAppbar extends BasePieFragmentOverview  {
         stepsGraphView = (TextView) v.findViewById(R.id.steps_graph);
         totalView = (TextView) v.findViewById(R.id.total);
         averageView = (TextView) v.findViewById(R.id.average);
-
+        TextView dataNotice = (TextView) v.findViewById(R.id.dataNotice);
+        dataNotice.setTextColor(config.getTextColor());
         stepsGraphView.setTextColor(config.getTextColor());
         ((TextView)v.findViewById(R.id.unit_graph)).setTextColor(config.getTextColor());
 
@@ -108,6 +111,8 @@ public class FragmentOverviewWideAppbar extends BasePieFragmentOverview  {
             }
         });
         createPie(v);
+        ((Activity_Main) getActivity()).showFullscreen();
+
         return v;
     }
 

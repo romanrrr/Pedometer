@@ -26,6 +26,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.configuration.Constants;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -132,14 +136,6 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
         config = ((PedometerApp) getActivity().getApplication()).getConfig();
 
 
-        MyPreference importPreference = (MyPreference) findPreference("import");
-        importPreference.setOnPreferenceClickListener(this);
-        importPreference.setTextColor(config.getTextColor());
-
-        MyPreference exportPreference = (MyPreference) findPreference("export");
-        exportPreference.setOnPreferenceClickListener(this);
-        exportPreference.setTextColor(config.getTextColor());
-
         MyCheckboxPreference notification = (MyCheckboxPreference) findPreference("notification");
         notification
                 .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -221,6 +217,11 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
         if(config.getAchievementList().size() == 0) {
             MenuItem achievements = menu.findItem(R.id.action_achievements);
             achievements.setVisible(false);
+        }else {
+            Drawable d = getResources().getDrawable(R.drawable.trophy);
+            MenuItem achievements = menu.findItem(R.id.action_achievements);
+            d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            achievements.setIcon(d);
         }
     }
 
@@ -326,36 +327,12 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
                 });
                 builder.create().show();
                 break;
-            case  "import":
-            case "export":
-                if (hasWriteExternalPermission()) {
-                    if (preference.getKey().equals("import")) {
-                        importCsv();
-                    } else {
-                        exportCsv();
-                    }
-                } else if (Build.VERSION.SDK_INT >= 23) {
-                    API23Wrapper.requestPermission(getActivity(),
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
-                } else {
-                    Toast.makeText(getActivity(), R.string.permission_external_storage,
-                            Toast.LENGTH_SHORT).show();
-                }
-                break;
             case "license":
                 AlertDialog.Builder aboutBuilder = new AlertDialog.Builder(getActivity());
                 aboutBuilder.setTitle(R.string.about);
                 TextView tv = new TextView(getActivity());
                 tv.setPadding(10, 10, 10, 10);
                 tv.setText(R.string.about_text_links);
-                try {
-                    tv.append(getString(R.string.about_app_version,
-                            getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
-                } catch (PackageManager.NameNotFoundException e1) {
-                    // should not happen as the app is definitely installed when
-                    // seeing the dialog
-                    e1.printStackTrace();
-                }
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
                 aboutBuilder.setView(tv);
                 aboutBuilder.setPositiveButton(android.R.string.ok,

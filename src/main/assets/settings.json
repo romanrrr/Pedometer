@@ -6,7 +6,7 @@
   "drawerBackgroundImage": "uploaded_data\/blue.jpg",
   "drawerIcon": "uploaded_data\/coub_icon.png",
   "layout": "basicLayout",
-  "stepsChart": "bars",
+  "stepsChart": "mpBars",
   "stepsChartColorSteps": "#cccc00",
   "stepsChartColorGoal": "#cc00cc",
   "pieChart": "mpPie",
