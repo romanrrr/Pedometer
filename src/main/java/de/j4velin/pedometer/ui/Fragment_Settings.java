@@ -213,16 +213,17 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
             inflater.inflate(R.menu.tabs_menu, menu);
         } else {
             inflater.inflate(R.menu.main, menu);
+            if(config.getAchievementList().size() == 0) {
+                MenuItem achievements = menu.findItem(R.id.action_achievements);
+                achievements.setVisible(false);
+            }else  {
+                Drawable d = getResources().getDrawable(R.drawable.trophy);
+                MenuItem achievements = menu.findItem(R.id.action_achievements);
+                d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                achievements.setIcon(d);
+            }
         }
-        if(config.getAchievementList().size() == 0) {
-            MenuItem achievements = menu.findItem(R.id.action_achievements);
-            achievements.setVisible(false);
-        }else {
-            Drawable d = getResources().getDrawable(R.drawable.trophy);
-            MenuItem achievements = menu.findItem(R.id.action_achievements);
-            d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-            achievements.setIcon(d);
-        }
+
     }
 
     @Override

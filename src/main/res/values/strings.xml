@@ -74,6 +74,6 @@
     <string name="app_metrica_on_start_event" translatable="false">{}</string>
     <string name="useful_tips">Useful tips</string>
     <string name="share">Share</string>
-    <string name="dataNotice">Data for the previous 7 days</string>
+    <string name="dataNotice">Last 7 days data</string>
 
 </resources>
