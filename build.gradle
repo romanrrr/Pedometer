@@ -78,6 +78,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     compile 'com.github.j4velin.colorpicker:colorpicker:1.2.3'
     compile 'com.github.j4velin.EazeGraph:EazeGraph:1.0.3'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'

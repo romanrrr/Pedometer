@@ -238,7 +238,7 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
                     menu.findItem(R.id.action_about).setVisible(enabled);
                 }
             });
-            if(config.getTipsUrl() == null || config.getTipsUrl().isEmpty()) {
+            if(config.getTipsList().size() == 0) {
                 menu.findItem(R.id.tips).setVisible(false);
             }
         }

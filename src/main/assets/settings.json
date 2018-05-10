@@ -1,59 +1,72 @@
 {
-  "backgroundImage": "",
-  "backgroundColor": "333333",
-  "textColor": "#ffffff",
-  "navigation": "menu",
-  "drawerBackgroundImage": "uploaded_data\/blue.jpg",
-  "drawerIcon": "uploaded_data\/coub_icon.png",
-  "layout": "basicLayout",
-  "stepsChart": "mpBars",
-  "stepsChartColorSteps": "#cccc00",
-  "stepsChartColorGoal": "#cc00cc",
-  "pieChart": "mpPie",
-  "pieStepsColor": "#2196F3",
-  "pieGoalColor": "#BBDEFB",
-  "progressWidth": "thick",
+  "background": {
+    "background": "backgroundColor",
+    "backgroundImage": "",
+    "backgroundColor": "199e59"
+  },
 
-  "achievementLockedImage": "uploaded_data\/placeholder.jpg",
-  "achievements": [
+  "textColor": "ffffff",
+  "usefulTips": [
     {
-      "name": "test3",
-      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
-      "image": "uploaded_data\/coub_icon.png",
-      "type": "stepsTotal",
-      "value": 100
+      "tipsName": "Run fast",
+      "tipsUrl": "http:\/\/www.appsgeyser.com\/create-pedometer-app\/"
     },
     {
-      "name": "test23",
-      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
-      "image": "uploaded_data\/coub_icon.png",
-      "type": "stepsDaily",
-      "value": 50
+      "tipsName": "Run slow",
+      "tipsUrl": "http:\/\/www.appsgeyser.com\/create-pedometer-app\/"
     },
     {
-      "name": "test233",
-      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
-      "image": "uploaded_data\/coub_icon.png",
-      "type": "stepsDaily",
-      "value": 50
+      "tipsName": "Red goes fasta",
+      "tipsUrl": "http:\/\/www.appsgeyser.com\/create-pedometer-app\/"
     },
     {
-      "name": "impossibru bru  bru  bru bru bru bru bru bru bru",
-      "description": "Description DescriptionDescrip tionDescriptionDes cript ionDescription DescriptionDescr iptionDescriptionDesc riptionDescription",
-      "image": "uploaded_data\/coub_icon.png",
-      "type": "stepsDaily",
-      "value": 50000
+      "tipsName": "One more useful tip",
+      "tipsUrl": "http:\/\/www.appsgeyser.com\/create-pedometer-app\/"
+    },
+    {
+      "tipsName": "Not very useful tip",
+      "tipsUrl": "http:\/\/www.appsgeyser.com\/create-pedometer-app\/"
     }
   ],
 
-  "tipsUrl": "http://nsk.iloverunning.net/",
+  "navigationRandom": {
+    "navigation": "drawer"
+  },
+  "drawerBackgroundImage": "uploaded_data\/wood.jpg",
+  "drawerIcon": "",
+  "layoutRandom": {
+    "layout": "basicLayout"
+  },
+  "stepsChartRandom": {
+    "stepsChart": "bars",
+    "stepsChartColorSteps": "f44336",
+    "stepsChartColorGoal": "607d8b"
+  },
+  "pieChartRandom": {
+    "pieChart": "mpPie",
+    "pieStepsColor": "e91e63",
+    "pieGoalColor": "e91e63"
+  },
+  "progressWidthRandom": {
+    "progressWidth": "thick"
+  },
 
-  "name": "PEDOMETR",
+  "achievementLockedImage": "uploaded_data\/wood.jpg",
+  "achievements": [
+    {
+      "achievementName": "dd",
+      "achievementDescription": "dd",
+      "achievementImage": "uploaded_data\/wood.jpg",
+      "stepsType": "stepsDaily",
+      "achievementValue": "1"
+    }
+  ],
+  "name": "pedometrv22",
   "template": "pedometer",
   "icon": "uploaded_data\/icon.png",
   "themeColors": {
-    "colorPrimary": "#ff0000",
-    "colorPrimaryDark": "#aa0000",
-    "colorAccent": "#00ff00"
+    "colorPrimary": "#2196f3",
+    "colorPrimaryDark": "#1976D2",
+    "colorAccent": "#448aff"
   }
 }

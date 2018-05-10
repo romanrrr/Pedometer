@@ -94,7 +94,7 @@ public class Activity_Main extends AppCompatActivity {
                     navigationView.getMenu().findItem(R.id.action_about).setVisible(enabled);
                 }
             });
-            if(config.getTipsUrl() == null || config.getTipsUrl().isEmpty()) {
+            if(config.getTipsList().size() == 0) {
                 navigationView.getMenu().findItem(R.id.tips).setVisible(false);
             }
             navigationView.setNavigationItemSelectedListener(
@@ -135,7 +135,9 @@ public class Activity_Main extends AppCompatActivity {
             headerRoot.setBackground(config.getDrawerBackgroundImage());
 
             CircleImageView circleImageView = getHeaderView.findViewById(R.id.circleView);
-            circleImageView.setImageDrawable(config.getDrawerIcon());
+            if(config.getDrawerIcon() != null) {
+                circleImageView.setImageDrawable(config.getDrawerIcon());
+            }
 
         } else if (config.getNavigation().equals(Config.Navigation.TABS.getName())) {
             setContentView(R.layout.main_activity_tabs);
@@ -153,10 +155,10 @@ public class Activity_Main extends AppCompatActivity {
             tabLayout.getTabAt(1).setText(R.string.settings);
             if(config.getAchievementList().size() > 0) {
                 tabLayout.getTabAt(2).setText(R.string.achievements);
-                if(config.getTipsUrl() != null && !config.getTipsUrl().isEmpty()) {
+                if(config.getTipsList().size() > 0) {
                     tabLayout.getTabAt(3).setText(R.string.useful_tips);
                 }
-            }else if(config.getTipsUrl() != null && !config.getTipsUrl().isEmpty()){
+            }else if(config.getTipsList().size() > 0){
                 tabLayout.getTabAt(2).setText(R.string.useful_tips);
             }
 
@@ -214,7 +216,7 @@ public class Activity_Main extends AppCompatActivity {
         }
 
         ImageView background = findViewById(R.id.background);
-        if (config.getBackgroundImage() != null) {
+        if (config.isUseBackgroundImage()) {
             background.setImageDrawable(config.getBackgroundImage());
         } else if (config.getBackgroundColor() != null) {
             background.setImageDrawable(new ColorDrawable(config.getBackgroundColor()));
@@ -295,7 +297,7 @@ public class Activity_Main extends AppCompatActivity {
             case R.id.tips:
                 item.setChecked(true);
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new TipsFragment(), "tips").addToBackStack(null)
+                        .replace(R.id.container, new TipsListFragment(), "tips").addToBackStack(null)
                         .commit();
                 break;
             case R.id.action_split_count:
@@ -305,11 +307,11 @@ public class Activity_Main extends AppCompatActivity {
                 }
                 return true;
             case R.id.action_share:
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                /*Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = config.getTipsUrl();
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));*/
                 break;
         }
         return true;
@@ -346,7 +348,7 @@ public class Activity_Main extends AppCompatActivity {
             if(config.getAchievementList().size() > 0) {
                 count++;
             }
-            if(config.getTipsUrl() != null && !config.getTipsUrl().isEmpty()) {
+            if(config.getTipsList().size() > 0) {
                 count++;
             }
             return count;

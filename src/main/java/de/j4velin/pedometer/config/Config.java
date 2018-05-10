@@ -76,6 +76,7 @@ public class Config {
         };
     }
 
+    private boolean useBackgroundImage;
     private Drawable backgroundImage;
     private Drawable achievementLockedImage;
     private Drawable drawerBackgroundImage;
@@ -88,8 +89,6 @@ public class Config {
     private String stepsChart;
     private String pieChart;
 
-    private String tipsUrl;
-
     private Integer primaryDarkColor;
     private Integer primaryColor;
     private Integer textColor;
@@ -101,6 +100,7 @@ public class Config {
     private Integer stepsChartColorGoal;
 
     List<Achievement> achievementList;
+    List<Tips> tipsList;
 
     private Context context;
 
@@ -109,35 +109,49 @@ public class Config {
         manageCache();
         try {
             JSONObject settings = new JSONObject(loadSettings(context));
-            backgroundImage = createDrawable(context, settings.getString("backgroundImage"));
             achievementLockedImage = createDrawable(context, settings.getString("achievementLockedImage"));
+
             drawerBackgroundImage = createDrawable(context, settings.getString("drawerBackgroundImage"));
             drawerIcon = createDrawable(context, settings.getString("drawerIcon"));
-            backgroundColor = readColor(settings, "backgroundColor");
+
+            JSONObject background = settings.getJSONObject("background");
+            useBackgroundImage = background.getString("background").equals("backgroundImage");
+            backgroundImage = createDrawable(context, background.getString("backgroundImage"));
+            backgroundColor = readColor(background, "backgroundColor");
+
             textColor = readColor(settings, "textColor");
-            pieGoalColor = readColor(settings, "pieGoalColor");
-            pieStepsColor = readColor(settings, "pieStepsColor");
-            stepsChartColorSteps = readColor(settings, "stepsChartColorSteps");
-            stepsChartColorGoal = readColor(settings, "stepsChartColorGoal");
 
             JSONObject themeColors = settings.getJSONObject("themeColors");
-
             primaryDarkColor = readColor(themeColors, "colorPrimaryDark");
             primaryColor = readColor(themeColors, "colorPrimary");
             accentColor = readColor(themeColors, "colorAccent");
 
-            navigation = settings.getString("navigation");
-            layout = settings.getString("layout");
-            stepsChart = settings.getString("stepsChart");
-            pieChart = settings.getString("pieChart");
-            progressWidth = settings.getString("progressWidth");
+            navigation = settings.getJSONObject("navigationRandom").getString("navigation");
+            layout = settings.getJSONObject("layoutRandom").getString("layout");
 
-            tipsUrl = settings.getString("tipsUrl");
+            JSONObject stepsChartRandom = settings.getJSONObject("stepsChartRandom");
+            stepsChart = stepsChartRandom.getString("stepsChart");
+            stepsChartColorSteps = readColor(stepsChartRandom, "stepsChartColorSteps");
+            stepsChartColorGoal = readColor(stepsChartRandom, "stepsChartColorGoal");
+
+            JSONObject pieChartRandom = settings.getJSONObject("pieChartRandom");
+            pieChart = pieChartRandom.getString("pieChart");
+            pieGoalColor = readColor(pieChartRandom, "pieGoalColor");
+            pieStepsColor = readColor(pieChartRandom, "pieStepsColor");
+
+
+            progressWidth = settings.getJSONObject("progressWidthRandom").getString("progressWidth");
 
             achievementList = new ArrayList<>();
             JSONArray achievementsArray = settings.getJSONArray("achievements");
             for(int i =0; i< achievementsArray.length(); i++){
                 achievementList.add(readAchievement(achievementsArray.getJSONObject(i)));
+            }
+
+            tipsList = new ArrayList<>();
+            JSONArray tipsArray = settings.getJSONArray("usefulTips");
+            for(int i =0; i< tipsArray.length(); i++){
+                tipsList.add(readTip(tipsArray.getJSONObject(i)));
             }
 
         } catch (JSONException e) {
@@ -151,12 +165,16 @@ public class Config {
 
     private Achievement readAchievement(JSONObject jsonAchievement) throws JSONException {
         Achievement achievement = new Achievement();
-        achievement.setName(jsonAchievement.getString("name"));
-        achievement.setDescription(jsonAchievement.getString("description"));
-        achievement.setImageUrl(jsonAchievement.getString("image"));
-        achievement.setType(Achievement.Type.valueOf(jsonAchievement.getString("type")));
-        achievement.setValue(jsonAchievement.getInt("value"));
+        achievement.setName(jsonAchievement.getString("achievementName"));
+        achievement.setDescription(jsonAchievement.getString("achievementDescription"));
+        achievement.setImageUrl(jsonAchievement.getString("achievementImage"));
+        achievement.setType(Achievement.Type.valueOf(jsonAchievement.getString("stepsType")));
+        achievement.setValue(jsonAchievement.getInt("achievementValue"));
         return achievement;
+    }
+
+    private Tips readTip(JSONObject jsonTip) throws JSONException {
+        return new Tips(jsonTip.getString("tipsName"), jsonTip.getString("tipsUrl"));
     }
 
     public Drawable createDrawable(Context context, String link) {
@@ -242,6 +260,10 @@ public class Config {
         return pieChart;
     }
 
+    public boolean isUseBackgroundImage() {
+        return useBackgroundImage;
+    }
+
     public Drawable getBackgroundImage() {
         return backgroundImage;
     }
@@ -324,7 +346,7 @@ public class Config {
         }
     }
 
-    public String getTipsUrl() {
-        return tipsUrl;
+    public List<Tips> getTipsList() {
+        return tipsList;
     }
 }

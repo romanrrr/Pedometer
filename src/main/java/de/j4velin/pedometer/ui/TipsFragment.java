@@ -73,7 +73,7 @@ public class TipsFragment extends Fragment {
                 progress.setVisibility(View.GONE);
             }
         });
-        webView.loadUrl(config.getTipsUrl());
+        //webView.loadUrl(config.getTipsUrl());
 
         setHasOptionsMenu(true);
         ((Activity_Main) getActivity()).showFullscreen();
