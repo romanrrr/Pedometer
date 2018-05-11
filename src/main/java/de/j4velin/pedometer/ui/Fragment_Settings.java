@@ -32,6 +32,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.text.method.LinkMovementMethod;
@@ -185,6 +186,7 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
                 prefs.getFloat("stepsize_value", DEFAULT_STEP_SIZE),
                 prefs.getString("stepsize_unit", DEFAULT_STEP_UNIT)));
         stepsize.setTextColor(config.getTextColor());
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.settings);
 
         MyPreference license = (MyPreference) findPreference("license");
         license.setOnPreferenceClickListener(this);

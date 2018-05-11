@@ -15,6 +15,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,6 +80,7 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         config = ((PedometerApp) getActivity().getApplication()).getConfig();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(config.getName());
     }
 
     /**

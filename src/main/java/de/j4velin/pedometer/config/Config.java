@@ -49,6 +49,8 @@ public class Config {
 
     private Boolean aboutEnabled;
 
+    private String name;
+
     public enum Navigation {
 
         DRAWER("drawer"),
@@ -139,6 +141,7 @@ public class Config {
             pieGoalColor = readColor(pieChartRandom, "pieGoalColor");
             pieStepsColor = readColor(pieChartRandom, "pieStepsColor");
 
+            name = settings.getString("name");
 
             progressWidth = settings.getJSONObject("progressWidthRandom").getString("progressWidth");
 
@@ -243,6 +246,10 @@ public class Config {
         return json;
     }
     //------------------------------------------------------
+
+    public String getName() {
+        return name;
+    }
 
     public List<Achievement> getAchievementList() {
         return achievementList;

@@ -107,7 +107,7 @@
 
         <activity
             android:name=".TipActivity"
-            android:label="@string/title_activity_tip"
+            android:label="@string/useful_tips"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"></activity>
     </application>

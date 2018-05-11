@@ -139,6 +139,9 @@ public class Activity_Main extends AppCompatActivity {
                 circleImageView.setImageDrawable(config.getDrawerIcon());
             }
 
+            TextView drawerTitle = getHeaderView.findViewById(R.id.name);
+            drawerTitle.setText(config.getName());
+
         } else if (config.getNavigation().equals(Config.Navigation.TABS.getName())) {
             setContentView(R.layout.main_activity_tabs);
             AppsgeyserSDK.takeOff(this,
@@ -208,7 +211,7 @@ public class Activity_Main extends AppCompatActivity {
             getWindow().setStatusBarColor(config.getPrimaryDarkColor());
         }
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(config.getPrimaryColor()));
-
+        getSupportActionBar().setTitle(config.getName());
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 23 && PermissionChecker
                 .checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PermissionChecker.PERMISSION_GRANTED) {
