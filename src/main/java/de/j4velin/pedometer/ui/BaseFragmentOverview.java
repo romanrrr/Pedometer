@@ -1,5 +1,6 @@
 package de.j4velin.pedometer.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -104,11 +105,14 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
 
     protected abstract void updateProgress();
 
-
+    boolean finishing = false;
 
     @Override
     public void onResume() {
         super.onResume();
+        if (finishing) {
+            return;
+        }
         if (config.getNavigation().equals(Config.Navigation.MENU.getName())) {
             ((Activity_Main) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
@@ -132,6 +136,7 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
                     (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
             Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             if (sensor == null) {
+                finishing = true;
                 new AlertDialog.Builder(getActivity()).setTitle(R.string.no_sensor)
                         .setMessage(R.string.no_sensor_explain)
                         .setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -211,10 +216,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
             inflater.inflate(R.menu.tabs_menu, menu);
         } else {
             inflater.inflate(R.menu.main, menu);
-            if(config.getAchievementList().size() == 0) {
+            if (config.getAchievementList().size() == 0) {
                 MenuItem achievements = menu.findItem(R.id.action_achievements);
                 achievements.setVisible(false);
-            }else {
+            } else {
                 Drawable d = getResources().getDrawable(R.drawable.trophy);
                 MenuItem achievements = menu.findItem(R.id.action_achievements);
                 d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
@@ -226,7 +231,7 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
                     menu.findItem(R.id.action_about).setVisible(enabled);
                 }
             });
-            if(config.getTipsList().size() == 0) {
+            if (config.getTipsList().size() == 0) {
                 menu.findItem(R.id.tips).setVisible(false);
             }
         }
@@ -277,12 +282,12 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         }
     }
 
-    protected void updateStepsChart(){
-        if(config.getStepsChart().equals(STEPS_CHART_MP_LINE)){
+    protected void updateStepsChart() {
+        if (config.getStepsChart().equals(STEPS_CHART_MP_LINE)) {
             updateMpLine();
-        }else if(config.getStepsChart().equals(STEPS_CHART_BARS)){
+        } else if (config.getStepsChart().equals(STEPS_CHART_BARS)) {
             updateBars();
-        }else if(config.getStepsChart().equals(STEPS_CHART_MP_BARS)){
+        } else if (config.getStepsChart().equals(STEPS_CHART_MP_BARS)) {
             updateMpBars();
         }
     }
@@ -309,10 +314,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         Entry bm;
         Database db = Database.getInstance(getActivity());
         List<Pair<Long, Integer>> last = db.getLastEntries(8);
-        while(last.size() < 8 ){
-            if(last.size() > 0) {
+        while (last.size() < 8) {
+            if (last.size() > 0) {
                 last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24 * 60 * 60 * 1000, 0));
-            }else {
+            } else {
                 last.add(new Pair<Long, Integer>(System.currentTimeMillis(), 0));
             }
         }
@@ -322,12 +327,12 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
 
         List<Entry> entriesGoal = new ArrayList<Entry>();
 
-        final Map<Integer, Date> integerDateMap =  new HashMap<>();
+        final Map<Integer, Date> integerDateMap = new HashMap<>();
         for (int i = last.size() - 1; i > 0; i--) {
             Pair<Long, Integer> current = last.get(i);
             steps = current.second;
             int x = last.size() - i;
-            if(steps < 0){
+            if (steps < 0) {
                 steps = 0;
             }
             if (showSteps) {
@@ -345,10 +350,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
             integerDateMap.put(x, new Date(current.first));
             entries.add(bm);
         }
-        if(showSteps) {
+        if (showSteps) {
             entriesGoal.add(new Entry(1, goal));
             entriesGoal.add(new Entry(last.size() - 1, goal));
-        }else {
+        } else {
             float distanceGoal = goal * stepsize;
             if (stepsize_cm) {
                 distanceGoal /= 100000;
@@ -375,7 +380,7 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 Date date = integerDateMap.get((int) value);
-                if(date == null){
+                if (date == null) {
                     return "";
                 }
                 return df.format(date);
@@ -408,10 +413,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         BarEntry bm;
         Database db = Database.getInstance(getActivity());
         List<Pair<Long, Integer>> last = db.getLastEntries(8);
-        while(last.size() < 8 ){
-            if(last.size() > 0) {
+        while (last.size() < 8) {
+            if (last.size() > 0) {
                 last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24 * 60 * 60 * 1000, 0));
-            }else {
+            } else {
                 last.add(new Pair<Long, Integer>(System.currentTimeMillis(), 0));
             }
         }
@@ -421,12 +426,12 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
 
         List<BarEntry> entriesGoal = new ArrayList<BarEntry>();
 
-        final Map<Integer, Date> integerDateMap =  new HashMap<>();
+        final Map<Integer, Date> integerDateMap = new HashMap<>();
         for (int i = last.size() - 1; i > 0; i--) {
             Pair<Long, Integer> current = last.get(i);
             steps = current.second;
             int x = last.size() - i;
-            if(steps < 0){
+            if (steps < 0) {
                 steps = 0;
             }
             if (showSteps) {
@@ -444,10 +449,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
             integerDateMap.put(x, new Date(current.first));
             entries.add(bm);
         }
-        if(showSteps) {
+        if (showSteps) {
             entriesGoal.add(new BarEntry(1, goal));
             entriesGoal.add(new BarEntry(last.size() - 1, goal));
-        }else {
+        } else {
             float distanceGoal = goal * stepsize;
             if (stepsize_cm) {
                 distanceGoal /= 100000;
@@ -471,7 +476,7 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         valueLineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if(value > integerDateMap.size()){
+                if (value > integerDateMap.size()) {
                     return "";
                 }
                 Date date = integerDateMap.get((int) value);
@@ -516,14 +521,14 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         BarModel bm;
         Database db = Database.getInstance(getActivity());
         List<Pair<Long, Integer>> last = db.getLastEntries(8);
-        while(last.size() < 8 && last.size() > 0){
-            last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24*60*60*1000, 0));
+        while (last.size() < 8 && last.size() > 0) {
+            last.add(new Pair<Long, Integer>(last.get(last.size() - 1).first - 24 * 60 * 60 * 1000, 0));
         }
         db.close();
         for (int i = last.size() - 1; i > 0; i--) {
             Pair<Long, Integer> current = last.get(i);
             steps = current.second;
-            if(steps < 0){
+            if (steps < 0) {
                 steps = 0;
             }
             bm = new BarModel(df.format(new Date(current.first)), 0,
