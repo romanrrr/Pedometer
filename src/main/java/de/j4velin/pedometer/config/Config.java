@@ -93,8 +93,8 @@ public class Config {
 
     private Integer primaryDarkColor;
     private Integer primaryColor;
-    private Integer textColor;
     private Integer accentColor;
+    private Integer textColor;
     private Integer pieStepsColor;
     private Integer pieGoalColor;
 
