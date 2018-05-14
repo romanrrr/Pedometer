@@ -428,7 +428,7 @@ public class SensorListener extends Service implements SensorEventListener {
                             getString(R.string.notification_title)).setContentIntent(PendingIntent
                     .getActivity(this, 0, new Intent(this, Activity_Main.class),
                             PendingIntent.FLAG_UPDATE_CURRENT))
-                    .setSmallIcon(R.drawable.ic_notification)
+                    .setSmallIcon(R.drawable.app_icon)
                     .addAction(isPaused ? R.drawable.ic_resume : R.drawable.ic_pause,
                             isPaused ? getString(R.string.resume) : getString(R.string.pause),
                             PendingIntent.getService(this, 4, new Intent(this, SensorListener.class)
