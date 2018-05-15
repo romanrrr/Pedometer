@@ -55,6 +55,7 @@ import de.j4velin.pedometer.SensorListener;
 import de.j4velin.pedometer.chart.MyBarChart;
 import de.j4velin.pedometer.config.Config;
 import de.j4velin.pedometer.util.Logger;
+import de.j4velin.pedometer.util.SensorFilter;
 import de.j4velin.pedometer.util.Util;
 
 import static de.j4velin.pedometer.config.Config.STEPS_CHART_BARS;
@@ -139,11 +140,9 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
             Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             if (sensor == null) {
                 Sensor as=sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-                Sensor mags=sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
                 if(as!=null)
                 {
                     sm.registerListener(this, as, SensorManager.SENSOR_DELAY_FASTEST);
-                    sm.registerListener(this, mags, SensorManager.SENSOR_DELAY_FASTEST);
                 } else {
                     finishing = true;
                     new AlertDialog.Builder(getActivity()).setTitle(R.string.no_sensor)
@@ -180,162 +179,61 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
         // won't happen
     }
-    public static final int MAX_BUFFER_SIZE = 5;
 
-    private static final int Y_DATA_COUNT = 4;
-    private static final double MIN_GRAVITY = 1.4;
-    private static final double MAX_GRAVITY = 1200;
 
-    private ArrayList<float[]> mAccelDataBuffer = new ArrayList<float[]>();
-    private ArrayList<Long> mMagneticFireData = new ArrayList<Long>();
-    private Long mLastStepTime = null;
-    private ArrayList<StepsPair> mAccelFireData = new ArrayList<StepsPair>();
+    private static final int ACCEL_RING_SIZE = 50;
+    private static final int VEL_RING_SIZE = 10;
 
-    private void accelDetector(float[] detectedValues, long timeStamp)
-    {
-        float[] currentValues = new float[3];
-        for (int i = 0; i < currentValues.length; ++i)
-        {
-            currentValues[i] = detectedValues[i];
+    // change this threshold according to your sensitivity preferences
+    private static final float STEP_THRESHOLD = 50f;
+
+    private static final int STEP_DELAY_NS = 250000000;
+
+    private int accelRingCounter = 0;
+    private float[] accelRingX = new float[ACCEL_RING_SIZE];
+    private float[] accelRingY = new float[ACCEL_RING_SIZE];
+    private float[] accelRingZ = new float[ACCEL_RING_SIZE];
+    private int velRingCounter = 0;
+    private float[] velRing = new float[VEL_RING_SIZE];
+    private long lastStepTimeNs = 0;
+    private float oldVelocityEstimate = 0;
+
+    public void updateAccel(long timeNs, float x, float y, float z) {
+        float[] currentAccel = new float[3];
+        currentAccel[0] = x;
+        currentAccel[1] = y;
+        currentAccel[2] = z;
+
+        // First step is to update our guess of where the global z vector is.
+        accelRingCounter++;
+        accelRingX[accelRingCounter % ACCEL_RING_SIZE] = currentAccel[0];
+        accelRingY[accelRingCounter % ACCEL_RING_SIZE] = currentAccel[1];
+        accelRingZ[accelRingCounter % ACCEL_RING_SIZE] = currentAccel[2];
+
+        float[] worldZ = new float[3];
+        worldZ[0] = SensorFilter.sum(accelRingX) / Math.min(accelRingCounter, ACCEL_RING_SIZE);
+        worldZ[1] = SensorFilter.sum(accelRingY) / Math.min(accelRingCounter, ACCEL_RING_SIZE);
+        worldZ[2] = SensorFilter.sum(accelRingZ) / Math.min(accelRingCounter, ACCEL_RING_SIZE);
+
+        float normalization_factor = SensorFilter.norm(worldZ);
+
+        worldZ[0] = worldZ[0] / normalization_factor;
+        worldZ[1] = worldZ[1] / normalization_factor;
+        worldZ[2] = worldZ[2] / normalization_factor;
+
+        float currentZ = SensorFilter.dot(worldZ, currentAccel) - normalization_factor;
+        velRingCounter++;
+        velRing[velRingCounter % VEL_RING_SIZE] = currentZ;
+
+        float velocityEstimate = SensorFilter.sum(velRing);
+
+        if (velocityEstimate > STEP_THRESHOLD && oldVelocityEstimate <= STEP_THRESHOLD
+                && (timeNs - lastStepTimeNs > STEP_DELAY_NS)) {
+            since_boot++;
+            updateProgress();
+            lastStepTimeNs = timeNs;
         }
-        mAccelDataBuffer.add(currentValues);
-        if (mAccelDataBuffer.size() > MAX_BUFFER_SIZE)
-        {
-            double avgGravity = 0;
-            for (float[] values : mAccelDataBuffer)
-            {
-                avgGravity += Math.abs(Math.sqrt(
-                        values[0] * values[0] + values[1] * values[1] + values[2] * values[2]) -    SensorManager.STANDARD_GRAVITY);
-            }
-            avgGravity /= mAccelDataBuffer.size();
-
-            if (avgGravity >= MIN_GRAVITY && avgGravity < MAX_GRAVITY)
-            {
-                mAccelFireData.add(new StepsPair(timeStamp, true));
-            }
-            else
-            {
-                mAccelFireData.add(new StepsPair(timeStamp, false));
-            }
-
-            if (mAccelFireData.size() >= Y_DATA_COUNT)
-            {
-                checkData(mAccelFireData, timeStamp);
-
-                mAccelFireData.remove(0);
-            }
-
-            mAccelDataBuffer.clear();
-        }
-    }
-
-    private void checkData(ArrayList<StepsPair> accelFireData, long timeStamp)
-    {
-        boolean stepAlreadyDetected = false;
-
-        Iterator<StepsPair> iterator = accelFireData.iterator();
-        while (iterator.hasNext() && !stepAlreadyDetected)
-        {
-            stepAlreadyDetected = iterator.next().first.equals(mLastStepTime);
-        }
-        if (!stepAlreadyDetected)
-        {
-            int firstPosition = Collections.binarySearch(mMagneticFireData, accelFireData.get(0).first);
-            int secondPosition = Collections
-                    .binarySearch(mMagneticFireData, accelFireData.get(accelFireData.size() - 1).first - 1);
-
-            if (firstPosition > 0 || secondPosition > 0 || firstPosition != secondPosition)
-            {
-                if (firstPosition < 0)
-                {
-                    firstPosition = -firstPosition - 1;
-                }
-                if (firstPosition < mMagneticFireData.size() && firstPosition > 0)
-                {
-                    mMagneticFireData = new ArrayList<Long>(
-                            mMagneticFireData.subList(firstPosition - 1, mMagneticFireData.size()));
-                }
-
-                iterator = accelFireData.iterator();
-                while (iterator.hasNext())
-                {
-                    if (iterator.next().second)
-                    {
-                        mLastStepTime = timeStamp;
-                        accelFireData.remove(accelFireData.size() - 1);
-                        accelFireData.add(new StepsPair(timeStamp, false));
-                        since_boot++;
-                        updateProgress();
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    private float mLastDirections;
-    private float mLastValues;
-    private float mLastExtremes[] = new float[2];
-    private Integer mLastType;
-    private ArrayList<Float> mMagneticDataBuffer = new ArrayList<Float>();
-
-    private void magneticDetector(float[] values, long timeStamp)
-    {
-        mMagneticDataBuffer.add(values[2]);
-
-        if (mMagneticDataBuffer.size() > MAX_BUFFER_SIZE)
-        {
-            float avg = 0;
-
-            for (int i = 0; i < mMagneticDataBuffer.size(); ++i)
-            {
-                avg += mMagneticDataBuffer.get(i);
-            }
-
-            avg /= mMagneticDataBuffer.size();
-
-            float direction = (avg > mLastValues ? 1 : (avg < mLastValues ? -1 : 0));
-            if (direction == -mLastDirections)
-            {
-                // Direction changed
-                int extType = (direction > 0 ? 0 : 1); // minumum or maximum?
-                mLastExtremes[extType] = mLastValues;
-                float diff = Math.abs(mLastExtremes[extType] - mLastExtremes[1 - extType]);
-
-                if (diff > 4 && (null == mLastType || mLastType != extType))
-                {
-                    mLastType = extType;
-
-                    mMagneticFireData.add(timeStamp);
-                }
-            }
-            mLastDirections = direction;
-            mLastValues = avg;
-
-            mMagneticDataBuffer.clear();
-        }
-    }
-
-    public static class StepsPair implements Serializable
-    {
-        Long first;
-        boolean second;
-
-        public StepsPair(long first, boolean second)
-        {
-            this.first = first;
-            this.second = second;
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if (o instanceof StepsPair)
-            {
-                return first.equals(((StepsPair) o).first);
-            }
-            return false;
-        }
+        oldVelocityEstimate = velocityEstimate;
     }
 
     @Override
@@ -350,13 +248,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         final float[] values = event.values;
         final Sensor sensor = event.sensor;
 
-        if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-        {
-            magneticDetector(values, event.timestamp / (500 * 10 ^ 6l));
-        }
         if (sensor.getType() == Sensor.TYPE_ACCELEROMETER)
         {
-            accelDetector(values, event.timestamp / (500 * 10 ^ 6l));
+            updateAccel(
+                    event.timestamp, event.values[0], event.values[1], event.values[2]);
         }
         if(event.sensor.getType()==Sensor.TYPE_STEP_COUNTER) {
             steps = (int) event.values[0];
@@ -452,11 +347,9 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
                     Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
                     if (sensor == null) {
                         Sensor as=sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-                        Sensor mags=sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
                         if(as!=null)
                         {
                             sm.registerListener(this, as, SensorManager.SENSOR_DELAY_FASTEST);
-                            sm.registerListener(this, mags, SensorManager.SENSOR_DELAY_FASTEST);
                         } else {
                             finishing = true;
                             new AlertDialog.Builder(getActivity()).setTitle(R.string.no_sensor)
