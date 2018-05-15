@@ -581,10 +581,10 @@ public abstract class BaseFragmentOverview extends Fragment implements SensorEve
         valueLineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if (value > integerDateMap.size()) {
+                Date date = integerDateMap.get((int) value);
+                if (date == null) {
                     return "";
                 }
-                Date date = integerDateMap.get((int) value);
                 return df.format(date);
             }
         });
