@@ -337,9 +337,9 @@ public class Activity_Main extends AppCompatActivity {
                     if(config.getAchievementList().size() > 0) {
                         return new AchievementsFragment();
                     }
-                    return new TipsFragment();
+                    return new TipsListFragment();
                 case 3:
-                    return new TipsFragment();
+                    return new TipsListFragment();
                 default:
                     return new Fragment_Settings();
             }
