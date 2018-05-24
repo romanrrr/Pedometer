@@ -187,6 +187,19 @@ public class SensorListener extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
+        Intent notificationIntent = new Intent(this, Activity_Main.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification =
+                new Notification.Builder(this)
+                        .setContentTitle(getText(R.string.notification_title))
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentIntent(pendingIntent).setPriority(Notification.PRIORITY_LOW)
+                        .build();
+
+        startForeground(NOTIFICATION_ID, notification);
+        updateNotificationState();
         if (intent != null && ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
             if (BuildConfig.DEBUG)
                 Logger.log("onStartCommand action: " + intent.getStringExtra("action"));

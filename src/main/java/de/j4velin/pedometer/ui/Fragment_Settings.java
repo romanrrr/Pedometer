@@ -138,6 +138,7 @@ public class Fragment_Settings extends PreferenceFragmentCompat implements Prefe
 
 
         MyCheckboxPreference notification = (MyCheckboxPreference) findPreference("notification");
+        notification.setVisible(false);
         notification
                 .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
